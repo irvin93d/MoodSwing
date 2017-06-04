@@ -1,5 +1,8 @@
 SentimentAnalysisIntent how does twitter feel about {Topic}
-SentimentAnalysisIntent what is twitter's oppinion of {Topic}
-SentimentAnalysisIntent what's twitter's oppinion of {Topic}
+SentimentAnalysisIntent what is twitter's opinion of {Topic}
+SentimentAnalysisIntent what's twitter's opinion of {Topic}
 SentimentAnalysisIntent {Topic}, how does twitter feel on the subject
 SentimentAnalysisIntent ask twitter how it feels about {Topic}
+SentimentAnalysisIntent ask how twitter feels about {Topic}
+SentimentAnalysisIntent what's twitter think about {Topic}
+SentimentAnalysisIntent what does twitter think about {Topic}
