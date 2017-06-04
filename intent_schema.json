@@ -1,0 +1,16 @@
+{
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "Topic",
+          "type": "LIST_OF_TOPICS"
+        }
+      ],
+      "intent": "SentimentAnalysisIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
