@@ -10,7 +10,7 @@ from __future__ import print_function
 
 # --------------- Helpers that build all of the responses ----------------------
 
-def build_speechlet_response(title, output, card_output reprompt_text, should_end_session):
+def build_speechlet_response(title, output, card_output, reprompt_text, should_end_session):
     return {
         'outputSpeech': {
             'type': 'PlainText',
@@ -57,7 +57,7 @@ def get_welcome_response():
                     "how does Twitter feel about Leonardo DiCaprio?"
     should_end_session = False
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, "Im on a card", reprompt_text, should_end_session))
 
 
 def handle_session_end_request():
@@ -67,7 +67,7 @@ def handle_session_end_request():
     # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return build_response({}, build_speechlet_response(
-        card_title, speech_output, None, should_end_session))
+        card_title, speech_output, "", None, should_end_session))
 
 
 def get_twitter_sentiment(intent, session):
@@ -76,6 +76,7 @@ def get_twitter_sentiment(intent, session):
 
     session_attributes = {}
     should_end_session = False
+    topic = "no input"
 
     if 'Topic' in intent['slots']:
         topic = intent['slots']['Topic']['value']
@@ -86,7 +87,7 @@ def get_twitter_sentiment(intent, session):
 
 
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, card_output, reprompt_text, should_end_session))
+        "Analysis", "Test Output. you said " + topic, "Hey its me a card", "why is this here", should_end_session))
 
 
 
