@@ -10,7 +10,7 @@ from __future__ import print_function
 
 # --------------- Helpers that build all of the responses ----------------------
 
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
+def build_speechlet_response(title, output, card_output reprompt_text, should_end_session):
     return {
         'outputSpeech': {
             'type': 'PlainText',
@@ -19,7 +19,7 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'card': {
             'type': 'Simple',
             'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
+            'content': "SessionSpeechlet - " + card_output
         },
         'reprompt': {
             'outputSpeech': {
@@ -80,8 +80,13 @@ def get_twitter_sentiment(intent, session):
     if 'Topic' in intent['slots']:
         topic = intent['slots']['Topic']['value']
 
+
+    #speech_output = 
+    #card_output =         
+
+
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, reprompt_text, should_end_session))
+        card_title, speech_output, card_output, reprompt_text, should_end_session))
 
 
 
