@@ -12,13 +12,6 @@ api = twitter.Api(consumer_key=twitter_config['consumer_key'],
                   access_token_key=twitter_config['access_token_key'],
                   access_token_secret=twitter_config['access_token_secret']
                   )
-black_list_words = ["the", "and", "of", "a", "is", "to"]
-
-max_w_len = 45  # Seems to be a very long word
-
-# Convert a word to a connonified form
-
-                # raw_query="q={0}&result_type=recent&count={1}".format(keyword, count)
 
 def getTweets(keyword, count=100):
     tweets = []
@@ -45,16 +38,3 @@ def getTweets(keyword, count=100):
 
 
     return [tweet.text for tweet in tweets]
-
-
-def main():
-
-    tweets = getTweets('trump', 200)
-
-    for tweet in tweets:
-        print(tweet)
-    print(len(tweets))
-
-if __name__ == "__main__":
-    # execute only if run as a script
-    main()
