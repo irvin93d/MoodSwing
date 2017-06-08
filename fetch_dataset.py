@@ -4,6 +4,7 @@ import json
 import sys
 from pprint import pprint
 import urllib
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 twitter_config = json.load(open('./twitter_config.json'))
 
@@ -12,6 +13,8 @@ api = twitter.Api(consumer_key=twitter_config['consumer_key'],
                   access_token_key=twitter_config['access_token_key'],
                   access_token_secret=twitter_config['access_token_secret']
                   )
+
+anal = SentimentIntensityAnalyzer() # TODO: rename?
 
 def getTweets(keyword, count=100):
     tweets = []
@@ -38,3 +41,30 @@ def getTweets(keyword, count=100):
 
 
     return [tweet.text for tweet in tweets]
+
+def getSentiment(topic):
+    tweets = getTweets(topic)
+    res = {
+        "neg": 0,
+        "pos": 0,
+        "neu": 0,
+        "compound": 0
+    }
+    
+    for tweet in tweets:
+        sentiment = anal.polarity_scores(tweet)
+        for (k,v) in sentiment.items():
+            res[k] += v
+
+    for (k, v) in res.items():
+        res[k] = v / len(tweets)
+
+    return res
+
+def main():
+    while True:
+        topic = input("Topic > ")
+        print(getSentiment(topic))
+
+if __name__ == '__main__':
+    main()
