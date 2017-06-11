@@ -37,13 +37,14 @@ def getTweets(keyword, count=100):
             lang="en")
         tweets.extend(statuses)
         saved += len(statuses)
+        print("Fetched tweets:", saved)
         nextId = statuses[len(statuses) - 1].id - 1
 
 
-    return [tweet.text for tweet in tweets]
+    return tweets
 
 def getSentiment(topic):
-    tweets = getTweets(topic)
+    tweets = [tweet.text for tweet in getTweets(topic)]
     res = {
         "neg": 0,
         "pos": 0,
