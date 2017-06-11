@@ -6,7 +6,82 @@ Kyle Vigil, Alex Boyd, Jonathan Ohlsson, Duane Irvin
 """
 
 from __future__ import print_function
+import twitter
+import string
+import json
+import sys
+from pprint import pprint
+import urllib
+import datetime
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
+api = twitter.Api(consumer_key='OLh11Nm6ad9w1a5QRD4h2ARxh',
+                  consumer_secret='82vgb7dxiwbHKP2h73qah43JBPXgz1nWs84SX9KqDxo6EoNNHO',
+                  access_token_key='2801824835-EaJY8MQkq4sssj2gMtj9Ig5lFnihtUxtpTn0JAM',
+                  access_token_secret='3BK70ksGKpcMFQ0ENuy6qWP6AOeFRmI45Dw8ysl2SByyh')
+
+anal = SentimentIntensityAnalyzer(lexicon_file="vader_lexicon.txt") # TODO: rename?
+
+def getTweets(keyword, count=100):
+    tweets = []
+    today = datetime.date.today().isoformat()
+    yesterday = datetime.date.fromordinal(datetime.date.today().toordinal()-1).isoformat()
+    last_week = datetime.date.fromordinal(datetime.date.today().toordinal()-7).isoformat()
+    dates = (last_week, yesterday, today, None)
+    
+    for i in range(3):
+        temp = []
+        nextId = None
+        left = count
+        toGet = 0
+        
+        while left > 0:
+            toGet = min(left, 100)
+            left -= 100
+
+            statuses = api.GetSearch(
+                term=keyword, 
+                max_id=nextId, 
+                count=toGet,
+                lang="en",
+                since=dates[i],
+                until=dates[i+1],
+                result_type="popular"
+            )
+            
+            temp.extend([t.text for t in statuses])
+
+            if len(statuses) == 0:
+                break
+            
+            nextId = statuses[len(statuses) - 1].id - 1
+            
+        tweets.append(temp)
+    
+    return tweets
+
+def getSentiment(tweets):
+    sentiments = []
+    negative = (0, "")
+    positive = (0, "")
+    
+    for i in range(3):
+        temp_sentiment = 0
+
+        if len(tweets[i]) == 0:
+            sentiments.append(0)
+        else:
+            for tweet in tweets[i]:
+                s = anal.polarity_scores(tweet)['compound']
+                temp_sentiment += s
+                if s > positive[0]:
+                    positive = (s, tweet)
+                if s < negative[0]:
+                    negative = (s, tweet)
+
+            sentiments.append(temp_sentiment / len(tweets[i]))
+
+    return sentiments, negative[1], positive[1]
 
 # --------------- Helpers that build all of the responses ----------------------
 
@@ -18,8 +93,8 @@ def build_speechlet_response(title, output, card_output, reprompt_text, should_e
         },
         'card': {
             'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + card_output
+            'title': title,
+            'content': card_output
         },
         'reprompt': {
             'outputSpeech': {
@@ -69,25 +144,44 @@ def handle_session_end_request():
     return build_response({}, build_speechlet_response(
         card_title, speech_output, "", None, should_end_session))
 
+def value(sent):
+    if sent < 0:
+        return 'negative'
+    elif sent > 0:
+        return 'positive'
+    else:
+        return 'neutral'
+
 
 def get_twitter_sentiment(intent, session):
     """ Main function to gather all twitter sentiment. Focus of work here.
     """
-
     session_attributes = {}
     should_end_session = False
-    topic = "no input"
+    topic = '<error>'
 
-    if 'Topic' in intent['slots']:
+    if 'Topic' in intent['slots'] and 'value' in intent['slots']['Topic']: # if alexa was able to pick up words from the user
         topic = intent['slots']['Topic']['value']
+        sentiment, negTweet, posTweet = getSentiment(getTweets(topic, 50))
+        posOut = ' '.join([i for i in posTweet.split() if 'http' not in i])
+        negOut = ' '.join([i for i in negTweet.split() if 'http' not in i])
 
+        speech_output = "last week twitter felt " + value(sentiment[0]) + " about " + topic + ". yesterday twitter felt " + value(sentiment[1]) \
+                        + " and today twitter feels " + value(sentiment[2]) + ". the most positive tweet was, " + posOut + " and the most negative tweet was, " + negOut
+        card_output = "Last week: " + value(sentiment[0]) + ", Score: " + str(sentiment[0]) + \
+                        "\nYesterday: " + value(sentiment[1]) + ", Score: " + str(sentiment[1]) + \
+                        "\nToday: " + value(sentiment[2]) + ", Score: " + str(sentiment[1]) + \
+                        "\nMost positive tweet: " + posTweet + "\nMost negative tweet: " + negTweet
 
-    #speech_output = 
-    #card_output =         
+        # speech_output = "twitter feels positive about " + topic + ", with a score of " + str(round(sentiment,2)) + \
+        # ". the most positive tweet is, " + ' '.join([i for i in posTweet.split() if 'http' not in i and i[0].isalpha()])
 
+    else: # no input from user
+        speech_output = "Sorry your input was not detected. Please try again"
+        card_output = "Error detecting input. Please try again. Format: Alexa, ask MoodSwing how twitter feels about <topic>"
 
     return build_response(session_attributes, build_speechlet_response(
-        "Analysis", "Test Output. you said " + topic, "Hey its me a card", "why is this here", should_end_session))
+        topic.title() + ": Twitter Analysis", speech_output, card_output, "why is this here", should_end_session))
 
 
 
