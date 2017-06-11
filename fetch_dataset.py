@@ -2,6 +2,7 @@ import twitter
 import string
 import json
 import sys
+import datetime
 from pprint import pprint
 import urllib
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -16,7 +17,7 @@ api = twitter.Api(consumer_key=twitter_config['consumer_key'],
 
 anal = SentimentIntensityAnalyzer() # TODO: rename?
 
-def getTweets(keyword, count=100):
+def getTweets(keyword, count=100, date=datetime.datetime.today().strftime('%Y-%m-%d')):
     tweets = []
     saved = 0
     nextId = None
@@ -34,10 +35,10 @@ def getTweets(keyword, count=100):
             term=keyword, 
             max_id=nextId, 
             count=count,
-            lang="en")
+            lang="en",
+            until=date)
         tweets.extend(statuses)
         saved += len(statuses)
-        print("Fetched tweets:", saved)
         nextId = statuses[len(statuses) - 1].id - 1
 
 
