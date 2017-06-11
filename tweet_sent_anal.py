@@ -11,7 +11,7 @@ def tweet_proba(tweet, subjects, v, model):
     
 def tweet_count(tweet):
     # retweets have more weight than favorites
-    return 5 * tweet[1] + tweet[2]
+    return 5 * tweet[1] + tweet[2] + 1
 
 def process_tweets(tweets, subject):
     # tweets is a list of size 3 tuples
