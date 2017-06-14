@@ -414,3 +414,35 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: #222222;
 }
+#contact .developer-info {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  margin: 24px 0px;
+}
+#contact img {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 150px;
+  height: auto;
+}
+#contact p {
+  margin-bottom: 0px;
+}
+#contact i {
+  margin: 8px;
+}
+#read-more {
+  color: white;
+}
+#read-more i {
+  color: white;
+}
+#read-more .more-links {
+  margin-top: 16px;
+}
+#read-more .more-link {
+  text-align: center;
+}
