@@ -22,10 +22,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 # api object to connect to the Twitter search to retrieve tweets
-api = twitter.Api(consumer_key='OLh11Nm6ad9w1a5QRD4h2ARxh',
-                  consumer_secret='82vgb7dxiwbHKP2h73qah43JBPXgz1nWs84SX9KqDxo6EoNNHO',
-                  access_token_key='2801824835-EaJY8MQkq4sssj2gMtj9Ig5lFnihtUxtpTn0JAM',
-                  access_token_secret='3BK70ksGKpcMFQ0ENuy6qWP6AOeFRmI45Dw8ysl2SByyh')
+# put in own details here,
+#api = twitter.Api(consumer_key, consumer_secret, access_token_key, access_token_secret)
 
 def emoji_to_name(text):
     # given a string, this will replace all of the emojis (ord >= 256) with the name of the emoji
