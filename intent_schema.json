@@ -1,16 +1,32 @@
 {
   "intents": [
     {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "SentimentAnalysisIntent",
+      "samples": [
+        "how does twitter feel about {noun|Topic} ",
+        "what is twitter's opinion of {name here|Topic}",
+        "what's twitter's opinion of {long words here|Topic}",
+        "how twitter feels about {small|Topic} "
+      ],
       "slots": [
         {
           "name": "Topic",
-          "type": "LIST_OF_TOPICS"
+          "type": "AMAZON.LITERAL",
+          "samples": []
         }
-      ],
-      "intent": "SentimentAnalysisIntent"
-    },
-    {
-      "intent": "AMAZON.HelpIntent"
+      ]
     }
   ]
 }
