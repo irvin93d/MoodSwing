@@ -4,8 +4,7 @@ import json
 from fetch_dataset import getSentiment
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-
-API_KEY = "1f06efa445634075b37476ab5065ebaf"
+#API_KEY = ENTER OWN API KEY HERE
 
 def _get_headlines():
     return requests.get("https://newsapi.org/v1/articles?source=the-new-york-times&sortBy=top&apiKey=" + API_KEY).json()
